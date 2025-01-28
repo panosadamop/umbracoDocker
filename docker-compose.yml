@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  umbraco:
+    build:
+      context: .
+    container_name: umbraco
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Umbraco__CMS__ConnectionStrings__umbracoDbDSN=Server=db;Database=UmbracoDb;User Id=sa;Password=ZXcv$%67;
+    volumes:
+      - ./umbraco-data:/app
+    restart: always
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=ZXcv$%67
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    restart: always
+
+volumes:
+  mssql-data:
+  umbraco-data:
